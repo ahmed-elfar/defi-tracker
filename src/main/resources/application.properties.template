@@ -1,0 +1,37 @@
+#spring boot
+spring.output.ansi.enabled=
+spring.sql.init.mode=
+logging.level.org.springframework=
+
+#data-source config
+spring.datasource.url=
+spring.datasource.driverClassName=
+spring.datasource.username=
+spring.datasource.password=
+
+#database config
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.h2.console.settings.trace=true
+spring.h2.console.settings.web-allow-others=false
+
+#jpa
+spring.jpa.database-platform=
+spring.jpa.show-sql=
+spring.jpa.properties.hibernate.format_sql=
+#spring.jpa.properties.javax.persistence.schema-generation.scripts.action=create
+#spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target=sql_scripts/create_schema.sql
+
+#hibernate properties
+spring.jpa.database-spring.jpa.hibernate.use-new-id-generator-mappings=
+spring.jpa.hibernate.ddl-auto=
+#hibernate.hbm2dll.create_namespaces=
+spring.jpa.properties.hibernate.jdbc.batch_size=
+spring.jpa.properties.hibernate.generate_statistics=
+spring.jpa.properties.hibernate.order_inserts=
+spring.jpa.properties.hibernate.batch_versioned_data=
+#spring.jpa.properties.hibernate.cache.use_second_level_cache=
+#spring.jpa.properties.hibernate.hbm2ddl.import_files=sql_scripts/create_schema.sql
+
+#app
+dump.script.path=
