@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude
-public class ShutdownSignal {
+class ShutdownSignal {
 
     @JsonProperty(required = true, defaultValue = "")
     private String signal;

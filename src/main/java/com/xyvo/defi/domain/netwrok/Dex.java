@@ -13,8 +13,8 @@ public class Dex {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, insertable = false, updatable = false)
-    private Integer network_id;
+    @Column(name = "network_id", nullable = false, insertable = false, updatable = false)
+    private Integer networkId;
 
     @Column(unique = true, nullable = false)
     private String name;
@@ -96,26 +96,18 @@ public class Dex {
     }
 
     public Integer getNetworkId() {
-        return network_id;
+        return networkId;
     }
 
     public void setNetworkId(Integer networkId) {
-        this.network_id = networkId;
-    }
-
-    public Integer getNetwork_id() {
-        return network_id;
-    }
-
-    public void setNetwork_id(Integer network_id) {
-        this.network_id = network_id;
+        this.networkId = networkId;
     }
 
     @Override
     public String toString() {
         return "Dex{" +
                 "id=" + id +
-                ", network_id=" + network_id +
+                ", network_id=" + networkId +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", version='" + version + '\'' +

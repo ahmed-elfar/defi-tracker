@@ -56,7 +56,7 @@ spring.h2.console.settings.trace=
 spring.h2.console.settings.web-allow-others=
 
 #tomcat
-#server.port=8080
+server.port=9090
 
 #jackson
 #spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=

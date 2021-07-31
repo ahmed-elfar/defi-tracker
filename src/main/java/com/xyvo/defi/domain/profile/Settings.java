@@ -1,4 +1,6 @@
-package com.xyvo.defi.domain;
+package com.xyvo.defi.domain.profile;
+
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
@@ -7,6 +9,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "settings", schema = DOMAIN_SCHEMA)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Settings extends Audited {
 
     public enum Strategy {
@@ -31,26 +34,26 @@ public class Settings extends Audited {
 
     //manual or auto
     @Column(nullable = false)
-    private Strategy buyStrategy = Strategy.MANUAL;
+    private Strategy buyStrategy;
 
     //manual or auto
     @Column(nullable = false)
-    private Strategy sellStrategy = Strategy.MANUAL;
+    private Strategy sellStrategy;
 
     @Column(nullable = false)
     private Integer maxTrx;
 
     @Column
-    private Integer minLiquidity /*= 1000*/;
+    private Integer minLiquidity;
 
     @Column
-    private Integer autoSellPercent /*= 20*/;
+    private Integer autoSellPercent;
 
     @Column(nullable = false)
     private Double trxValue;
 
     @Column(nullable = false)
-    private Integer slippage = 0;
+    private Integer slippage;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -140,15 +143,25 @@ public class Settings extends Audited {
         this.sellStrategy = sellStrategy;
     }
 
-    public void setMaxTrx(Integer maxTrx) {
-        this.maxTrx = maxTrx;
-    }
-
     public Integer getAutoSellPercent() {
         return autoSellPercent;
     }
 
     public void setAutoSellPercent(Integer autoSellPercent) {
         this.autoSellPercent = autoSellPercent;
+    }
+
+    public static Settings getDefaultSettings() {
+        Settings settings = new Settings();
+        settings.userId = null;
+        settings.lockedLiquidityOnly = true;
+        settings.buyStrategy = Strategy.MANUAL;
+        settings.sellStrategy = Strategy.MANUAL;
+        settings.minLiquidity = 1000;
+        settings.autoSellPercent = 50;
+        settings.maxTrx = 100;
+        settings.trxValue = 2D;
+        settings.slippage = 20;
+        return settings;
     }
 }

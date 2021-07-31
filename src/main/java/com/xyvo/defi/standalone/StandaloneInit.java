@@ -1,5 +1,7 @@
 package com.xyvo.defi.standalone;
 
+import com.xyvo.defi.domain.profile.Settings;
+import com.xyvo.defi.domain.profile.User;
 import com.xyvo.defi.domain.netwrok.Dex;
 import com.xyvo.defi.domain.netwrok.Network;
 
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -21,75 +25,71 @@ import static com.xyvo.defi.mapper.NetworkMapper.toNetwork;
 
 @Component
 @Scope("prototype")
-public class Init {
+public class StandaloneInit {
 
     private final NetWorkRepo netWorkRepo;
     private final DexRepo dexRepo;
     private final UserRepo userRepo;
+    private final JdbcTemplate jdbcTemplate;
+    private static boolean invokedOnce = false;
 
     @Autowired
-    public Init(NetWorkRepo netWorkRepo, DexRepo dexRepo, UserRepo userRepo) {
+    public StandaloneInit(NetWorkRepo netWorkRepo, DexRepo dexRepo, UserRepo userRepo, JdbcTemplate jdbcTemplate) {
         this.netWorkRepo = netWorkRepo;
         this.dexRepo = dexRepo;
         this.userRepo = userRepo;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static void create(Environment env) {
+        ImportExportRunner.create(env);
     }
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void addNetworks() {
+    public void initializeData() {
+        if(invokedOnce) return;
+        invokedOnce = true;
+        addNetworks();
+        addDexS();
+        importData();
+        //addUsers();
+    }
+
+    private void addNetworks() {
         for (BlockChain bc: BlockChain.values()) {
             Network netWork = toNetwork(bc);
             netWorkRepo.insert(netWork.getChainId(), netWork.getName(), netWork.getRpcUrl(), netWork.getSymbol());
         }
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional
-    public void addDexS() {
+    private void addDexS() {
         for (DexC dexC: DexC.values()) {
             Dex dex = toDex(dexC);
             dexRepo.insert(dexC.ordinal(), dex.getNetworkId(), dex.getName(), dex.getAddress(),
                     dex.getVersion(),dex.getTokenSymbol(), dex.getStatus());
         }
-
-//        //TODO remove
-//        List<Dex> l = new LinkedList<>();
-//        for (DexC dexC: DexC.values()) {
-//            Network n = new Network();
-//            n.setChainId(1);
-//            Dex dex = toDex(dexC);
-//            dex.setNetWork(n);
-//            l.add(dex);
-//        }
-//        l.forEach(x -> System.out.println(x));
-//        dexRepo.saveAllAndFlush(l);
-
-//        List<Integer> ids = new LinkedList<>();
-//        for (DexC dexC: DexC.values()) {
-//            ids.add(dexC.id);
-//        }
-//        dexRepo.findAllById(ids);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void importData() {
-        ImportExportRunner.getInstance().runImportScript();
+    private void importData() {
+        ImportExportRunner.getInstance().runImportScript(jdbcTemplate.getDataSource());
     }
 
-//    @EventListener(ApplicationReadyEvent.class)
-//    @Transactional
-//    public void adduser() {
-//        User user = new User();
-//        user.setUserName("user1");
-//        userRepo.save(user);
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        user = new User();
-//        user.setUserName("user2");
-//        userRepo.save(user);
-//    }
+    private void addUsers() {
+        //TODO remove
+        User user = new User();
+        user.setUserName("user3");
+        user.setSettings(Settings.getDefaultSettings());
+        userRepo.save(user);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        user = new User();
+        user.setUserName("user4");
+        user.setSettings(Settings.getDefaultSettings());
+        userRepo.save(user);
+    }
 
 }

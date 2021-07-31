@@ -7,15 +7,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
+import javax.sql.DataSource;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
-public final class ImportExportRunner {
+final class ImportExportRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportExportRunner.class);
 
@@ -40,7 +44,7 @@ public final class ImportExportRunner {
         dataPath = dumpScriptPath + File.separator + "data.sql";
     }
 
-    public static void create(Environment env) {
+    static void create(Environment env) {
         if(instance == null){
             synchronized (ImportExportRunner.class) {
                 if(instance == null) {
@@ -82,7 +86,7 @@ public final class ImportExportRunner {
             Files.write(Paths.get(dataPath), userInserts, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING);
             Files.deleteIfExists(Paths.get(userPath));
         } catch (Throwable t) {
-            LOG.error("Failed to export tables.", t);
+            LOG.error("Failed to export tables. ", t);
             return;
         }
         LOG.info("Exported tables successfully.");
@@ -120,15 +124,16 @@ public final class ImportExportRunner {
         return sb.toString();
     }
 
-    void runImportScript() {
+    void runImportScript(DataSource dataSource) {
         LOG.info("Importing tables");
         File dumpFile = new File(dataPath);
         if (!dumpFile.exists()) {
-            LOG.warn(String.format("No such file. Attempt to run import sql script @%s", dataPath));
+            LOG.warn("No such file. Failed to run import sql script @{}", dataPath);
             return;
         }
-        try {
-            RunScript.execute(url, user, password, dataPath,null, false);
+
+        try(Connection connection = dataSource.getConnection(); Reader reader = new FileReader(dataPath);){
+            RunScript.execute(connection, reader);
         } catch (Throwable t) {
             LOG.error("Failed to import tables.", t);
             throw new RuntimeException("Failed to import tables.");

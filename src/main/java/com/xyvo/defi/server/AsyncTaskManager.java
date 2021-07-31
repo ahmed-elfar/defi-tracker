@@ -1,5 +1,6 @@
-package com.xyvo.defi.utils;
+package com.xyvo.defi.server;
 
+import com.xyvo.defi.utils.Utils;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
@@ -12,7 +13,7 @@ public class AsyncTaskManager implements TaskManager {
 
     public AsyncTaskManager() {
         int threads = Math.max(1 , Runtime.getRuntime().availableProcessors() - 1);
-        Utils.CONSOLE_LOG.info("Initializing ThreadPool with " + threads + " threads.");
+        Utils.CONSOLE_LOG.info("Initializing ThreadPool with {} threads.", threads);
         executorService = Executors.newFixedThreadPool(threads);
     }
 

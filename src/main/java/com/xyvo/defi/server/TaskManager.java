@@ -1,4 +1,4 @@
-package com.xyvo.defi.utils;
+package com.xyvo.defi.server;
 
 public interface TaskManager {
 

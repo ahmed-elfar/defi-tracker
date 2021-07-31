@@ -1,7 +1,7 @@
 package com.xyvo.defi.standalone;
 
-import com.xyvo.defi.utils.AsyncTaskManager;
-import com.xyvo.defi.utils.TaskManager;
+import com.xyvo.defi.server.AsyncTaskManager;
+import com.xyvo.defi.server.TaskManager;
 import com.xyvo.defi.utils.Utils;
 import com.xyvo.defi.server.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;

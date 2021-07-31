@@ -1,6 +1,6 @@
 package com.xyvo.defi;
 
-import com.xyvo.defi.standalone.ImportExportRunner;
+import com.xyvo.defi.standalone.StandaloneInit;
 import com.xyvo.defi.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
-//@ComponentScan(basePackageClasses = {com.xyvo.defitrackerportfolio.standalone.ShutdownController.class})
 public class DefiTrackerPortfolioApplication implements CommandLineRunner {
 
 	private final Environment env;
@@ -26,15 +25,10 @@ public class DefiTrackerPortfolioApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		for (String profileName : env.getActiveProfiles()) {
-			Utils.CONSOLE_LOG.warn("Currently active profile - " + profileName);
+			Utils.CONSOLE_LOG.warn("Currently active profile - {}", profileName);
 		}
 
-		ImportExportRunner.create(env);
-		//Runtime.getRuntime().addShutdownHook(Export.addDumpHook(env));
+		StandaloneInit.create(env);
 	}
 
-//	@PreDestroy
-//	private void shutdown() {
-//		Export.addDumpHook(env).run();
-//	}
 }

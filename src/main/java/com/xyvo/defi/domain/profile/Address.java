@@ -1,31 +1,35 @@
-package com.xyvo.defi.domain;
+package com.xyvo.defi.domain.profile;
 
 import javax.persistence.*;
 
 import static com.xyvo.defi.utils.DomainUtils.*;
 
 @Entity
-@Table(name = "Address", schema = DOMAIN_SCHEMA)
+@Table(name = "address", schema = DOMAIN_SCHEMA)
 public class Address {
 
-    @Transient
-    private static final transient String ID_GEN = "id_gen2";
-
+//    @Transient
+//    private static final transient String ID_GEN = "id_gen2";
+//
+//    @Id
+//    @SequenceGenerator(name = ID_GEN, sequenceName = ID_GEN, allocationSize = DEFAULT_ALLOCATION_SIZE)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_GEN)
     @Id
-    @SequenceGenerator(name = ID_GEN, sequenceName = ID_GEN, allocationSize = DEFAULT_ALLOCATION_SIZE)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_GEN)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = ADDRESS_LENGTH, unique = true, nullable = false)
     private String hex;
 
     @Column(nullable = false)
-    private Double balance = 0D;
+    private Long balance;
+
+    @Column(nullable = false)
+    private Integer networkId;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
 
 
     public Address() {
@@ -47,11 +51,11 @@ public class Address {
         this.hex = hex;
     }
 
-    public Double getBalance() {
+    public Long getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(Long balance) {
         this.balance = balance;
     }
 
@@ -63,5 +67,11 @@ public class Address {
         this.user = user;
     }
 
+    public Integer getNetworkId() {
+        return networkId;
+    }
 
+    public void setNetworkId(Integer networkId) {
+        this.networkId = networkId;
+    }
 }
