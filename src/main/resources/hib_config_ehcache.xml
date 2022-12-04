@@ -1,0 +1,46 @@
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'>
+
+    <service>
+        <jsr107:defaults enable-statistics="true"/>
+    </service>
+
+    <!--<thread-pools>
+        <thread-pool alias="listenerPool" min-size="1" max-size="3"/>
+    </thread-pools>-->
+
+    <cache-template name= "DefiHibernateCache">
+        <key-type> org.hibernate.cache.internal.CacheKeyImplementation</key-type>
+        <value-type>org.hibernate.cache.spi.support.AbstractReadWriteAccess$Lockable</value-type>
+
+        <expiry>
+            <none/>
+        </expiry>
+
+        <listeners>
+            <listener>
+                <class>com.xyvo.defi.CacheConfigCustom.HibernateEventLogger</class>
+                <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
+                <event-ordering-mode>UNORDERED</event-ordering-mode>
+                <events-to-fire-on>CREATED</events-to-fire-on>
+                <events-to-fire-on>UPDATED</events-to-fire-on>
+                <events-to-fire-on>EXPIRED</events-to-fire-on>
+                <events-to-fire-on>REMOVED</events-to-fire-on>
+                <events-to-fire-on>EVICTED</events-to-fire-on>
+            </listener>
+        </listeners>
+
+        <resources>
+            <heap unit="entries">2000</heap>
+        </resources>
+    </cache-template>
+
+    <cache alias="UserCache" uses-template="DefiHibernateCache">
+    </cache>
+
+    <cache alias="SettingsCache" uses-template="DefiHibernateCache">
+    </cache>
+
+</config>

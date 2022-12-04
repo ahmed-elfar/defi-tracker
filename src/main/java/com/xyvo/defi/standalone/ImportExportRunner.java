@@ -1,6 +1,7 @@
 package com.xyvo.defi.standalone;
 
 
+import com.xyvo.defi.utils.DomainUtils;
 import org.h2.tools.RunScript;
 import org.h2.tools.Script;
 import org.slf4j.Logger;
@@ -105,7 +106,8 @@ final class ImportExportRunner {
     private String getUserTable() {
         StringBuilder sb = new StringBuilder();
         sb.append("table ");
-        sb.append("DOMAIN.USER");
+        sb.append(DomainUtils.DOMAIN_SCHEMA);
+        sb.append(".USER");
         return sb.toString();
     }
 
@@ -113,14 +115,17 @@ final class ImportExportRunner {
         StringBuilder sb = new StringBuilder();
         sb.append("table ");
 
-        //sb.append("NETWORK.NETWORK, ");
-        //sb.append("NETWORK.DEX, ");
+        sb.append(DomainUtils.DOMAIN_SCHEMA);
+        sb.append(".SETTINGS, ");
+        sb.append(DomainUtils.DOMAIN_SCHEMA);
+        sb.append(".ADDRESS, ");
 
-        //sb.append("DOMAIN.USER, ");
-        sb.append("DOMAIN.SETTINGS, ");
-        sb.append("DOMAIN.ADDRESS, ");
-
-        sb.append("TRANSACTIONS.TRANSACTION");
+        sb.append(DomainUtils.TRANSACTIONS_SCHEMA);
+        sb.append(".pending_transaction, ");
+        sb.append(DomainUtils.TRANSACTIONS_SCHEMA);
+        sb.append(".active_transaction, ");
+        sb.append(DomainUtils.TRANSACTIONS_SCHEMA);
+        sb.append(".history_transaction");
         return sb.toString();
     }
 

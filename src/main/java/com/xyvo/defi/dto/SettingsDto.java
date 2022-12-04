@@ -1,70 +1,33 @@
-package com.xyvo.defi.domain.profile;
+package com.xyvo.defi.dto;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.xyvo.defi.domain.profile.Settings.Strategy;
 
-import javax.persistence.*;
 
-import static com.xyvo.defi.utils.DomainUtils.DOMAIN_SCHEMA;
-import static javax.persistence.GenerationType.IDENTITY;
+@JsonInclude()
+public class SettingsDto extends AuditedDto {
 
-@Entity
-@Table(name = "settings", schema = DOMAIN_SCHEMA)
-@Cacheable
-@org.hibernate.annotations.Cache(region = "SettingsCache", usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Settings extends Audited {
-
-    public enum Strategy {
-        AUTO,
-        MANUAL
-    }
-
-//    @Transient
-//    private static final transient String ID_GEN = "id_gen3";
-//
-//    @Id
-//    @SequenceGenerator(name = ID_GEN, sequenceName = ID_GEN, allocationSize = DEFAULT_ALLOCATION_SIZE)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_GEN)
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "user_id", unique = true)
     private Long userId;
 
-    @Column
     private Boolean lockedLiquidityOnly;
 
-    //manual or auto
-    @Column(nullable = false)
     private Strategy buyStrategy;
 
-    //manual or auto
-    @Column(nullable = false)
     private Strategy sellStrategy;
 
-    @Column(nullable = false)
     private Integer maxTrx;
 
-    @Column
     private Integer minLiquidity;
 
-    @Column
     private Integer autoSellPercent;
 
-    @Column(nullable = false)
     private Double trxValue;
 
-    @Column(nullable = false)
     private Integer slippage;
 
-    @Column()
-    private Integer exchangeEvery;
+    private int orderInterval;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-
-    public Settings() {
+    public SettingsDto() {
     }
 
     /**
@@ -131,14 +94,6 @@ public class Settings extends Audited {
         this.slippage = slippage;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Strategy getSellStrategy() {
         return sellStrategy;
     }
@@ -155,16 +110,16 @@ public class Settings extends Audited {
         this.autoSellPercent = autoSellPercent;
     }
 
-    public int getExchangeEvery() {
-        return exchangeEvery;
+    public int getOrderInterval() {
+        return orderInterval;
     }
 
-    public void setExchangeEvery(int exchangeEvery) {
-        this.exchangeEvery = exchangeEvery;
+    public void setOrderInterval(int orderInterval) {
+        this.orderInterval = orderInterval;
     }
 
-    public static Settings getDefaultSettings() {
-        Settings settings = new Settings();
+    public static SettingsDto getDefaultSettings() {
+        SettingsDto settings = new SettingsDto();
         settings.userId = null;
         settings.lockedLiquidityOnly = true;
         settings.buyStrategy = Strategy.MANUAL;
@@ -174,7 +129,7 @@ public class Settings extends Audited {
         settings.maxTrx = 100;
         settings.trxValue = 2D;
         settings.slippage = 20;
-        settings.exchangeEvery = 60;
+        settings.orderInterval = 60;
         return settings;
     }
 }

@@ -10,7 +10,8 @@ import static com.xyvo.defi.utils.DomainUtils.USER_NAME_LENGTH;
 
 @Entity
 @Table(name = "user", schema = DOMAIN_SCHEMA)
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cacheable
+@org.hibernate.annotations.Cache(region = "UserCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends Audited {
 
 //    @Transient

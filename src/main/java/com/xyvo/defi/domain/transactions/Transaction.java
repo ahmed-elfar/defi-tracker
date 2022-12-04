@@ -1,15 +1,12 @@
 package com.xyvo.defi.domain.transactions;
 
 import com.xyvo.defi.domain.profile.Audited;
-import com.xyvo.defi.domain.profile.User;
-
 import javax.persistence.*;
 
 import static com.xyvo.defi.utils.DomainUtils.*;
 
-@Entity
-@Table(name = "transaction", schema = TRANSACTIONS_SCHEMA)
-public class Transaction extends Audited {
+@MappedSuperclass
+public abstract class Transaction extends Audited {
 
 //    @Transient
 //    private static final transient String ID_GEN = "id_gen4";
@@ -24,7 +21,10 @@ public class Transaction extends Audited {
         ACTIVE("Active"),
         CLOSED("Closed"),
         FAILED("Failed"),
-        RUGGED("Rugged");
+        RUGGED("Rugged"),
+        BURNED("Burned"),
+        UNTRACKED("UnTracked"),
+        UNKNOWN("Unknown");
 
         public final String trxStatus;
 
@@ -35,60 +35,124 @@ public class Transaction extends Audited {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
+
+    @Column(nullable = false)
+    protected Integer networkId;
+
+    @Column(nullable = false)
+    protected Integer dexId;
 
     @Column(length = ADDRESS_LENGTH, /*unique = true,*/ nullable = false)
-    private String tokenAddress;
+    protected String tokenAddress;
 
     @Column(length = TOKEN_SYMBOL_LENGTH, nullable = false)
-    private String tokenSymbol;
+    protected String tokenSymbol;
 
     @Column(length = TOKEN_NAME_LENGTH, nullable = false)
-    private String tokenName;
+    protected String tokenName;
 
     @Column(nullable = false)
-    private Double openPrice;
+    protected Double currentPrice;
 
     @Column(nullable = false)
-    private Double currentPrice;
+    protected Double totalLiquidity;
 
     @Column(nullable = false)
-    private Double closedPrice;
+    protected Status status = Status.UNKNOWN;
 
-    @Column(nullable = false)
-    private Double totalLiquidity;
+    @Column()
+    protected Integer exchangeEvery;
 
-    @Column(nullable = false)
-    private Status status;
+    @Column()
+    protected Integer attempts;
 
+    public Long getId() {
+        return id;
+    }
 
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
-//
-//    @Column(nullable = false)
-//    private Double totalLiquidity;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    public Integer getNetworkId() {
+        return networkId;
+    }
 
+    public void setNetworkId(Integer networkId) {
+        this.networkId = networkId;
+    }
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    public Integer getDexId() {
+        return dexId;
+    }
+
+    public void setDexId(Integer dexId) {
+        this.dexId = dexId;
+    }
+
+    public String getTokenAddress() {
+        return tokenAddress;
+    }
+
+    public void setTokenAddress(String tokenAddress) {
+        this.tokenAddress = tokenAddress;
+    }
+
+    public String getTokenSymbol() {
+        return tokenSymbol;
+    }
+
+    public void setTokenSymbol(String tokenSymbol) {
+        this.tokenSymbol = tokenSymbol;
+    }
+
+    public String getTokenName() {
+        return tokenName;
+    }
+
+    public void setTokenName(String tokenName) {
+        this.tokenName = tokenName;
+    }
+
+    public Double getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(Double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public Double getTotalLiquidity() {
+        return totalLiquidity;
+    }
+
+    public void setTotalLiquidity(Double totalLiquidity) {
+        this.totalLiquidity = totalLiquidity;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Integer getExchangeEvery() {
+        return exchangeEvery;
+    }
+
+    public void setExchangeEvery(Integer exchangeEvery) {
+        this.exchangeEvery = exchangeEvery;
+    }
+
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
+    }
+
 }

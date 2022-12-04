@@ -5,55 +5,60 @@ import com.xyvo.defi.domain.profile.User;
 import com.xyvo.defi.domain.netwrok.Dex;
 import com.xyvo.defi.domain.netwrok.Network;
 
-import com.xyvo.defi.repository.DexRepo;
-import com.xyvo.defi.repository.NetWorkRepo;
-import com.xyvo.defi.repository.UserRepo;
+import com.xyvo.defi.repository.api.DexRepo;
+import com.xyvo.defi.repository.api.NetWorkRepo;
+import com.xyvo.defi.repository.api.UserRepo;
 import com.xyvo.defi.utils.BlockChain;
 import com.xyvo.defi.utils.DexC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static com.xyvo.defi.mapper.NetworkMapper.toDex;
 import static com.xyvo.defi.mapper.NetworkMapper.toNetwork;
 
 @Component
-@Scope("prototype")
 public class StandaloneInit {
 
     private final NetWorkRepo netWorkRepo;
     private final DexRepo dexRepo;
     private final UserRepo userRepo;
     private final JdbcTemplate jdbcTemplate;
-    private static boolean invokedOnce = false;
+
+    private static volatile boolean invokedOnce = false;
 
     @Autowired
-    public StandaloneInit(NetWorkRepo netWorkRepo, DexRepo dexRepo, UserRepo userRepo, JdbcTemplate jdbcTemplate) {
+    StandaloneInit(NetWorkRepo netWorkRepo, DexRepo dexRepo, UserRepo userRepo, JdbcTemplate jdbcTemplate) {
         this.netWorkRepo = netWorkRepo;
         this.dexRepo = dexRepo;
         this.userRepo = userRepo;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static void create(Environment env) {
+    public static void createWithEnvironment(Environment env) {
         ImportExportRunner.create(env);
     }
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
+    @Order(1)
     public void initializeData() {
         if(invokedOnce) return;
         invokedOnce = true;
         addNetworks();
         addDexS();
         importData();
-        //addUsers();
+        //addUsers(3, 2000);
     }
 
     private void addNetworks() {
@@ -75,21 +80,17 @@ public class StandaloneInit {
         ImportExportRunner.getInstance().runImportScript(jdbcTemplate.getDataSource());
     }
 
-    private void addUsers() {
+    private void addUsers(int start, int endInclusive) {
         //TODO remove
-        User user = new User();
-        user.setUserName("user3");
-        user.setSettings(Settings.getDefaultSettings());
-        userRepo.save(user);
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        user = new User();
-        user.setUserName("user4");
-        user.setSettings(Settings.getDefaultSettings());
-        userRepo.save(user);
+        List<User> users = IntStream.range(start, endInclusive + 1)
+                .mapToObj(id -> "user" + id)
+                .map(userName -> {
+                    User user = new User();
+                    user.setUserName(userName);
+                    user.setSettings(Settings.getDefaultSettings());
+                    return user;
+                }).collect(Collectors.toList());
+        userRepo.saveAllAndFlush(users);
     }
 
 }

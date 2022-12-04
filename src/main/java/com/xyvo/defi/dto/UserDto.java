@@ -3,11 +3,10 @@ package com.xyvo.defi.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xyvo.defi.domain.profile.Address;
-import com.xyvo.defi.domain.profile.Settings;
 
 import java.util.List;
 
-@JsonInclude
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UserDto extends AuditedDto {
 
     private long id;
@@ -16,7 +15,7 @@ public class UserDto extends AuditedDto {
 
     private List<Address> addresses;
 
-    private Settings settings;
+    private SettingsDto settings;
 
     public UserDto() {
     }
@@ -36,8 +35,8 @@ public class UserDto extends AuditedDto {
         this.addresses = addresses;
     }
 
-    public void setSettings(Settings settings) {
-        this.settings = settings;
+    public void setSettings(SettingsDto settingsDto) {
+        this.settings = settingsDto;
     }
 
     public List<Address> getAddresses() {
@@ -52,7 +51,7 @@ public class UserDto extends AuditedDto {
         return userName;
     }
 
-    public Settings getSettings() {
+    public SettingsDto getSettings() {
         return settings;
     }
 }

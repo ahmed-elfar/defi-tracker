@@ -3,7 +3,7 @@ package com.xyvo.defi.service;
 import com.xyvo.defi.domain.profile.Settings;
 import com.xyvo.defi.domain.profile.User;
 import com.xyvo.defi.dto.UserDto;
-import com.xyvo.defi.repository.UserRepo;
+import com.xyvo.defi.repository.api.UserRepo;
 import com.xyvo.defi.server.ServerException;
 import com.xyvo.defi.server.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;

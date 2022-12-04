@@ -2,7 +2,7 @@ package com.xyvo.defi.web;
 
 import com.jayway.jsonpath.JsonPath;
 import com.xyvo.defi.IntegrationTestConfig;
-import com.xyvo.defi.repository.UserRepo;
+import com.xyvo.defi.repository.api.UserRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;

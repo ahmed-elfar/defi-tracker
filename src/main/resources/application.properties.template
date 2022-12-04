@@ -1,7 +1,8 @@
 #spring boot
 spring.main.banner-mode=
 spring.output.ansi.enabled=
-spring.cache.jcache.config=
+#spring.cache.jcache.config=
+spring.cache.ehcache.config=
 spring.sql.init.mode=
 
 spring.mvc.log-request-details=
@@ -44,7 +45,11 @@ spring.jpa.database-spring.jpa.hibernate.use-new-id-generator-mappings=
 spring.jpa.properties.hibernate.format_sql=
 hibernate.cache.use_query_cache=
 hibernate.cache.use_second_level_cache=
-hibernate.cache.region.factory_class=
+spring.jpa.properties.hibernate.cache.region.factory_class=
+spring.jpa.properties.hibernate.javax.cache.provider=
+spring.jpa.properties.hibernate.javax.cache.uri=
+spring.jpa.properties.hibernate.cache.ehcache.missing_cache_strategy=
+spring.jpa.properties.hibernate.javax.cache.missing_cache_strategy=
 #hibernate.hbm2dll.create_namespaces=
 #spring.jpa.properties.hibernate.jdbc.time_zone=
 #spring.jpa.properties.hibernate.cache.use_second_level_cache=

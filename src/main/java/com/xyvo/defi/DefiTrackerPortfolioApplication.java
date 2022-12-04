@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class DefiTrackerPortfolioApplication implements CommandLineRunner {
 
 	private final Environment env;
+	private static ConfigurableApplicationContext applicationContext;
 
 	@Autowired
 	public DefiTrackerPortfolioApplication(Environment env) {
@@ -19,7 +22,12 @@ public class DefiTrackerPortfolioApplication implements CommandLineRunner {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DefiTrackerPortfolioApplication.class, args);
+		applicationContext = SpringApplication.run(DefiTrackerPortfolioApplication.class, args);
+	}
+
+
+	public static ApplicationContext getApplicationContext() {
+		return applicationContext;
 	}
 
 	@Override
@@ -28,7 +36,7 @@ public class DefiTrackerPortfolioApplication implements CommandLineRunner {
 			Utils.CONSOLE_LOG.warn("Currently active profile - {}", profileName);
 		}
 
-		StandaloneInit.create(env);
+		StandaloneInit.createWithEnvironment(env);
 	}
 
 }

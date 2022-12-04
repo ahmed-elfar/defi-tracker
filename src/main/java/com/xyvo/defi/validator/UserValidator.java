@@ -27,6 +27,7 @@ public class UserValidator {
     }
 
     public static void validateName(String userName) {
+        //use regex for username validation
         if(userName == null || userName.length() < 3 || userName.length() > DomainUtils.USER_NAME_LENGTH){
             throw new ValidationException("Username must be between 3 and 50 characters inclusive.");
         }

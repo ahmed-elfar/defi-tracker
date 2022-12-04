@@ -1,6 +1,11 @@
 package com.xyvo.defi.domain.profile;
 
+import com.xyvo.defi.domain.transactions.Active;
+import com.xyvo.defi.domain.transactions.History;
+
 import javax.persistence.*;
+
+import java.util.List;
 
 import static com.xyvo.defi.utils.DomainUtils.*;
 
@@ -30,6 +35,12 @@ public class Address {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(targetEntity = Active.class, mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Active> actives;
+
+    @OneToMany(targetEntity = History.class, mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<History> histories;
 
 
     public Address() {

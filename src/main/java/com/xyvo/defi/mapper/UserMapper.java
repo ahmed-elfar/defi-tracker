@@ -4,7 +4,6 @@ import com.xyvo.defi.domain.profile.User;
 import com.xyvo.defi.dto.UserDto;
 import com.xyvo.defi.validator.UserValidator;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +15,8 @@ public class UserMapper {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUserName(user.getUserName());
-        userDto.setCreatedTimestamp(new Timestamp(user.getCreated().getTime()));
-        userDto.setUpdatedTimestamp(new Timestamp(user.getUpdated().getTime()));
-        //userDto.removeNanos();
+        AuditedMapper.mapTimeStamp(userDto, user);
+        userDto.setSettings(SettingsMapper.toDto(user.getSettings()));
         return userDto;
     }
 

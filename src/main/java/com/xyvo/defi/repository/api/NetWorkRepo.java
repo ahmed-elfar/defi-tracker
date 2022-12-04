@@ -1,4 +1,4 @@
-package com.xyvo.defi.repository;
+package com.xyvo.defi.repository.api;
 
 import com.xyvo.defi.domain.netwrok.Network;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -7,11 +7,14 @@
         <jsr107:defaults enable-statistics="true"/>
     </service>
 
+
+
     <!--<thread-pools>
         <thread-pool alias="listenerPool" min-size="1" max-size="3"/>
     </thread-pools>-->
 
     <cache-template name= "DeFiCache">
+        <!--<key-type copier="org.ehcache.impl.copy.SerializingCopier">java.lang.Long</key-type>-->
         <key-type>java.lang.Long</key-type>
         <value-type>java.lang.String</value-type>
 
@@ -22,7 +25,7 @@
 
         <listeners>
             <listener>
-                <class>com.xyvo.defi.CacheConfigCustom.EventLogger</class>
+                <class>com.xyvo.defi.CacheConfigCustom.ServiceEventLogger</class>
                 <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>

@@ -7,7 +7,7 @@ import com.xyvo.defi.utils.DomainUtils;
 
 import java.sql.Timestamp;
 
-@JsonInclude
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class AuditedDto {
 
     @JsonIgnore
